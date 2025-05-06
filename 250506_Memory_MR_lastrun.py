@@ -152,6 +152,7 @@ end_button = keyboard.Keyboard()
 # Create some handy timers
 globalClock = core.Clock()  # to track the time since experiment started
 routineTimer = core.CountdownTimer()  # to track time remaining of each (non-slip) routine 
+triggerClock = core.Clock()
 
 # ------Prepare to start Routine "intro"-------
 continueRoutine = True
@@ -211,8 +212,11 @@ while continueRoutine:
         if len(_trigger_allKeys):
             trigger.keys = _trigger_allKeys[-1].name  # just the last key pressed
             trigger.rt = _trigger_allKeys[-1].rt
+            # RESET triggerClock here → this marks the true experiment start
+            triggerClock.reset()
             # a response ends the routine
             continueRoutine = False
+            thisExp.addData('trigger_time', triggerClock.getTime())
     
     # check for quit (typically the Esc key)
     if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
@@ -250,7 +254,7 @@ thisExp.nextEntry()
 routineTimer.reset()
 
 # set up handler to look after randomisation of conditions etc
-trials = data.TrialHandler(nReps=1.0, method='random', 
+trials = data.TrialHandler(nReps=1.0, method='sequential', 
     extraInfo=expInfo, originPath=-1,
     trialList=data.importConditions('memoryTask_inputs\\\\memory_condition1_2.csv'),
     seed=None, name='trials')
@@ -268,6 +272,7 @@ for thisTrial in trials:
         for paramName in thisTrial:
             exec('{} = thisTrial[paramName]'.format(paramName))
     
+    
     # ------Prepare to start Routine "screenshots"-------
     continueRoutine = True
     # update component parameters for each repeat
@@ -277,7 +282,7 @@ for thisTrial in trials:
     jitter = random.uniform(1,2)
     current_jitter = jitter
     thisExp.addData('ITI_jitter', current_jitter)
-    thisExp.addData('ITI_Memory.startTime', globalClock.getTime())
+    # thisExp.addData('ITI_Memory.startTime', globalClock.getTime())
     
     # To shuffle stimulus locations and correct responses
     shuffle(imCentersMC)
@@ -356,6 +361,7 @@ for thisTrial in trials:
                 fixation.frameNStop = frameN  # exact frame index
                 win.timeOnFlip(fixation, 'tStopRefresh')  # time at next scr refresh
                 fixation.setAutoDraw(False)
+                thisExp.addData('fixation_time', triggerClock.getTime())
         
         # *image_before* updates
         if image_before.status == NOT_STARTED and tThisFlip >= current_jitter + 0.2-frameTolerance:
@@ -373,6 +379,7 @@ for thisTrial in trials:
                 image_before.frameNStop = frameN  # exact frame index
                 win.timeOnFlip(image_before, 'tStopRefresh')  # time at next scr refresh
                 image_before.setAutoDraw(False)
+                thisExp.addData('image_before_abs_startTime', triggerClock.getTime())
         
         # *image_after* updates
         if image_after.status == NOT_STARTED and tThisFlip >= current_jitter + 0.2-frameTolerance:
@@ -390,6 +397,7 @@ for thisTrial in trials:
                 image_after.frameNStop = frameN  # exact frame index
                 win.timeOnFlip(image_after, 'tStopRefresh')  # time at next scr refresh
                 image_after.setAutoDraw(False)
+                thisExp.addData('image_after_abs_startTime', triggerClock.getTime())
         
         # *order_choice* updates
         waitOnFlip = False
@@ -418,6 +426,7 @@ for thisTrial in trials:
             if len(_order_choice_allKeys):
                 order_choice.keys = _order_choice_allKeys[-1].name  # just the last key pressed
                 order_choice.rt = _order_choice_allKeys[-1].rt
+                thisExp.addData('order_choice_abs_time', triggerClock.getTime())
                 # was this correct?
                 if (order_choice.keys == str(MCfam_keyboard)) or (order_choice.keys == MCfam_keyboard):
                     order_choice.corr = 1
@@ -547,6 +556,7 @@ while continueRoutine:
         end_text.tStartRefresh = tThisFlipGlobal  # on global time
         win.timeOnFlip(end_text, 'tStartRefresh')  # time at next scr refresh
         end_text.setAutoDraw(True)
+        thisExp.addData('end_text_abs_time', triggerClock.getTime())
     
     # *end_button* updates
     waitOnFlip = False
@@ -567,6 +577,7 @@ while continueRoutine:
         if len(_end_button_allKeys):
             end_button.keys = _end_button_allKeys[-1].name  # just the last key pressed
             end_button.rt = _end_button_allKeys[-1].rt
+            thisExp.addData('experiment_end_abs_time', triggerClock.getTime())
             # a response ends the routine
             continueRoutine = False
     
