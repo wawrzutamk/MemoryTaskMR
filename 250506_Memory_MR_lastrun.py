@@ -382,7 +382,7 @@ for thisTrial in trials:
                 image_before.frameNStop = frameN  # exact frame index
                 win.timeOnFlip(image_before, 'tStopRefresh')  # time at next scr refresh
                 image_before.setAutoDraw(False)
-                fixation_abs_end = triggerClock.getTime()
+                image_before_abs_end = triggerClock.getTime()
         
         # *image_after* updates
         if image_after.status == NOT_STARTED and tThisFlip >= current_jitter + 0.2-frameTolerance:
