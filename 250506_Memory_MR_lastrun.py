@@ -635,7 +635,7 @@ if end_button.keys != None:  # we had a response
     thisExp.addData('end_button.rt', end_button.rt)
 thisExp.addData('end_button.started', end_button.tStartRefresh)
 thisExp.addData('end_button.stopped', end_button.tStopRefresh)
-thisExp.addData('experiment_abs_end, experiment_abs_end)
+thisExp.addData('experiment_abs_end', experiment_abs_end)
 thisExp.nextEntry()
 # the Routine "end_screen" was not non-slip safe, so reset the non-slip timer
 routineTimer.reset()
