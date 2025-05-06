@@ -434,8 +434,8 @@ for thisTrial in trials:
                 order_choice_abs_start = triggerClock.getTime()
                
                 # Time at button release (relative to triggerClock), if available
-                if lastKey.duration is not None:
-                    order_choice_abs_end = order_choice_start + lastKey.duration  # press time + hold duration
+                if order_choice.duration is not None:
+                    order_choice_abs_end = order_choice_start + order_choice.duration  # press time + hold duration
                 else:
                     order_choice_abs_end = None  # still being held down
 
