@@ -426,18 +426,22 @@ for thisTrial in trials:
                 win.timeOnFlip(order_choice, 'tStopRefresh')  # time at next scr refresh
                 order_choice.status = FINISHED
         if order_choice.status == STARTED and not waitOnFlip:
-            theseKeys = order_choice.getKeys(keyList=['2', '3'], waitRelease=False)
+            # Enable capturing key press + release
+            theseKeys = order_choice.getKeys(keyList=['2', '3'], waitRelease=True)
             _order_choice_allKeys.extend(theseKeys)
             if len(_order_choice_allKeys):
-                order_choice.keys = _order_choice_allKeys[-1].name  # just the last key pressed
-                order_choice.rt = _order_choice_allKeys[-1].rt
-                order_choice_abs_start = triggerClock.getTime()
-               
-                # Time at button release (relative to triggerClock), if available
-                if order_choice.duration is not None:
-                    order_choice_abs_end = order_choice_start + order_choice.duration  # press time + hold duration
+                lastKey = _order_choice_allKeys[-1]
+                order_choice.keys = lastKey.name  # last key pressed
+                order_choice.rt = lastKey.rt  # reaction time from order_choice.clock
+        
+                # Time at press (absolute, from triggerClock)
+                order_choice_start = triggerClock.getTime()
+        
+                # Time at release (absolute), if available
+                if lastKey.duration is not None:
+                    order_choice_end = order_choice_start + lastKey.duration
                 else:
-                    order_choice_abs_end = None  # still being held down
+                    order_choice_end = None
 
                 # was this correct?
                 if (order_choice.keys == str(MCfam_keyboard)) or (order_choice.keys == MCfam_keyboard):
