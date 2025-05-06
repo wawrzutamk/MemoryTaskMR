@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2021.1.2),
@@ -435,13 +435,13 @@ for thisTrial in trials:
                 order_choice.rt = lastKey.rt  # reaction time from order_choice.clock
         
                 # Time at press (absolute, from triggerClock)
-                order_choice_start = triggerClock.getTime()
+                order_choice_abs_start = triggerClock.getTime()
         
                 # Time at release (absolute), if available
                 if lastKey.duration is not None:
-                    order_choice_end = order_choice_start + lastKey.duration
+                    order_choice_abs_end = order_choice_abs_start + lastKey.duration
                 else:
-                    order_choice_end = None
+                    order_choice_abs_end = None
 
                 # was this correct?
                 if (order_choice.keys == str(MCfam_keyboard)) or (order_choice.keys == MCfam_keyboard):
@@ -510,16 +510,15 @@ for thisTrial in trials:
     trials.addData('fixation.stopped', fixation.tStopRefresh)
     thisExp.addData('fixation_abs_start', fixation_abs_start)
     thisExp.addData('fixation_abs_end', fixation_abs_end)
-    thisExp.addData('fixation_time', fixation_abs_start)
     if thisTrial['condition'] == 'real':
         trials.addData('image_before.started', image_before.tStartRefresh)
         trials.addData('image_before.stopped', image_before.tStopRefresh)
         trials.addData('image_before_abs_start', image_before_abs_start)
-        trials.addData('image_before_abs_end', image_before_abs_end)    
+        #trials.addData('image_before_abs_end', image_before_abs_end)    
         trials.addData('image_after.started', image_after.tStartRefresh)
         trials.addData('image_after.stopped', image_after.tStopRefresh)
         trials.addData('image_after_abs_start', image_after_abs_start)
-        trials.addData('image_after_abs_end', image_after_abs_end)
+        #trials.addData('image_after_abs_end', image_after_abs_end)
     # check responses
     if order_choice.keys in ['', [], None]:  # No response was made
         order_choice.keys = None
