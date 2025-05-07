@@ -401,9 +401,9 @@ for thisTrial in trials:
                 image_after.setAutoDraw(False)
                 imgae_after_end = triggerClock.getTime()
         
-        # *order_choice* updates
+       # *order_choice* updates
         waitOnFlip = False
-        if order_choice.status == NOT_STARTED and tThisFlip >= current_jitter + 0.1-frameTolerance:
+        if order_choice.status == NOT_STARTED and tThisFlip >= current_jitter + 0.1 - frameTolerance:
             # keep track of start time/frame for later
             order_choice.frameNStart = frameN  # exact frame index
             order_choice.tStart = t  # local t and not account for scr refresh
@@ -413,39 +413,48 @@ for thisTrial in trials:
             order_choice_start = triggerClock.getTime()
             # keyboard checking is just starting
             waitOnFlip = True
-            win.callOnFlip(order_choice.clock.reset)  # t=0 on next screen flip
+            win.callOnFlip(order_choice.clock.reset)  # reset keyboard clock on next flip
             win.callOnFlip(order_choice.clearEvents, eventType='keyboard')  # clear events on next screen flip
+        
+            # === Calculate clock offset between triggerClock and keyboard clock ===
+            keyboard_offset = triggerClock.getTime() - order_choice.clock.getTime()
+        
         if order_choice.status == STARTED:
             # is it time to stop? (based on global clock, using actual start)
-            if tThisFlipGlobal > order_choice.tStartRefresh + 5-frameTolerance:
+            if tThisFlipGlobal > order_choice.tStartRefresh + 5 - frameTolerance:
                 # keep track of stop time/frame for later
                 order_choice.tStop = t  # not accounting for scr refresh
                 order_choice.frameNStop = frameN  # exact frame index
                 win.timeOnFlip(order_choice, 'tStopRefresh')  # time at next scr refresh
                 order_choice_end = triggerClock.getTime()
                 order_choice.status = FINISHED
+        
         if order_choice.status == STARTED and not waitOnFlip:
-            theseKeys = order_choice.getKeys(keyList=['2', '3'], waitRelease=False)
+            theseKeys = order_choice.getKeys(keyList=['2', '3'], waitRelease=True)
             _order_choice_allKeys.extend(theseKeys)
             if len(_order_choice_allKeys):
                 lastKey = _order_choice_allKeys[-1]
                 order_choice.keys = lastKey.name  # just the last key pressed
-                order_choice.rt = lastKey.rt
-                
-                # get press start and end times
-                order_choice_press_start = triggerClock.getTime()
+                order_choice.rt = lastKey.rt      # relative to keyboard clock
+        
+                # === Calculate press start relative to triggerClock ===
+                order_choice_press_start = lastKey.rt + keyboard_offset
+        
+                # === Calculate press end relative to triggerClock (if released) ===
                 if lastKey.duration is not None:
                     order_choice_press_end = order_choice_press_start + lastKey.duration
                 else:
                     order_choice_press_end = None
-                    
+        
                 # was this correct?
                 if (order_choice.keys == str(MCfam_keyboard)) or (order_choice.keys == MCfam_keyboard):
                     order_choice.corr = 1
                 else:
                     order_choice.corr = 0
+        
                 # a response ends the routine
                 continueRoutine = False
+
         
         # *index_finger_text* updates
         if index_finger_text.status == NOT_STARTED and tThisFlip >= asarray(current_jitter + 0.1)-frameTolerance:
