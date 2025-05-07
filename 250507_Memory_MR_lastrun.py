@@ -430,30 +430,35 @@ for thisTrial in trials:
                 order_choice.status = FINISHED
         
         if order_choice.status == STARTED and not waitOnFlip:
+            # calculate clock offset only once, after keyboard clock reset has happened
+            if not hasattr(order_choice, 'keyboard_offset_calculated'):
+                keyboard_offset = triggerClock.getTime() - order_choice.clock.getTime()
+                order_choice.keyboard_offset = keyboard_offset
+                order_choice.keyboard_offset_calculated = True
+        
             theseKeys = order_choice.getKeys(keyList=['2', '3'], waitRelease=True)
             _order_choice_allKeys.extend(theseKeys)
             if len(_order_choice_allKeys):
                 lastKey = _order_choice_allKeys[-1]
-                order_choice.keys = lastKey.name  # just the last key pressed
-                order_choice.rt = lastKey.rt      # relative to keyboard clock
+                order_choice.keys = lastKey.name
+                order_choice.rt = lastKey.rt
         
-                # === Calculate press start relative to triggerClock ===
-                order_choice_press_start = lastKey.rt + keyboard_offset
+                # use stored offset
+                order_choice_press_start = lastKey.rt + order_choice.keyboard_offset
         
-                # === Calculate press end relative to triggerClock (if released) ===
                 if lastKey.duration is not None:
                     order_choice_press_end = order_choice_press_start + lastKey.duration
                 else:
                     order_choice_press_end = None
         
-                # was this correct?
+                # check correctness
                 if (order_choice.keys == str(MCfam_keyboard)) or (order_choice.keys == MCfam_keyboard):
                     order_choice.corr = 1
                 else:
                     order_choice.corr = 0
         
-                # a response ends the routine
                 continueRoutine = False
+
 
         
         # *index_finger_text* updates
