@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2021.1.2),
@@ -518,11 +518,11 @@ for thisTrial in trials:
     trials.addData('image_before.started', image_before.tStartRefresh)
     trials.addData('image_before.stopped', image_before.tStopRefresh)
     trials.addData('image_before_start', image_before_start)
-    trials.addData('image_before_end', image_before_end)
+    #trials.addData('image_before_end', image_before_end)
     trials.addData('image_after.started', image_after.tStartRefresh)
     trials.addData('image_after.stopped', image_after.tStopRefresh)
     trials.addData('image_after_start', image_after_start)
-    trials.addData('image_after_end', image_after_end)
+    #trials.addData('image_after_end', image_after_end)
     # check responses
     if order_choice.keys in ['', [], None]:  # No response was made
         order_choice.keys = None
