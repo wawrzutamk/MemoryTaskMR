@@ -434,7 +434,7 @@ for thisTrial in trials:
                 
                 # get press start and end times
                 order_choice_press_start = triggerClock.getTime()
-                if lastKey.duration in not None:
+                if lastKey.duration is not None:
                     order_choice_press_end = order_choice_press_start + lastKey.duration
                 else:
                     order_choice_press_end = None
