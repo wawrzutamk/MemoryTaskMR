@@ -152,6 +152,7 @@ end_button = keyboard.Keyboard()
 # Create some handy timers
 globalClock = core.Clock()  # to track the time since experiment started
 routineTimer = core.CountdownTimer()  # to track time remaining of each (non-slip) routine 
+triggerClock = core.Clock() # to track time since MR input trigger
 
 # ------Prepare to start Routine "intro"-------
 continueRoutine = True
@@ -211,6 +212,8 @@ while continueRoutine:
         if len(_trigger_allKeys):
             trigger.keys = _trigger_allKeys[-1].name  # just the last key pressed
             trigger.rt = _trigger_allKeys[-1].rt
+            triggerClock.reset()
+            trigger_time = triggerClock.getTime()
             # a response ends the routine
             continueRoutine = False
     
@@ -245,6 +248,7 @@ if trigger.keys != None:  # we had a response
     thisExp.addData('trigger.rt', trigger.rt)
 thisExp.addData('trigger.started', trigger.tStartRefresh)
 thisExp.addData('trigger.stopped', trigger.tStopRefresh)
+thisExp.addData('trigger_time', trigger_time) # Just to check that it actually reset and the value is close to zero
 thisExp.nextEntry()
 # the Routine "intro" was not non-slip safe, so reset the non-slip timer
 routineTimer.reset()
@@ -348,6 +352,7 @@ for thisTrial in trials:
             fixation.tStartRefresh = tThisFlipGlobal  # on global time
             win.timeOnFlip(fixation, 'tStartRefresh')  # time at next scr refresh
             fixation.setAutoDraw(True)
+            fixation_start = triggerClock.getTime()
         if fixation.status == STARTED:
             # is it time to stop? (based on global clock, using actual start)
             if tThisFlipGlobal > fixation.tStartRefresh + asarray(current_jitter)-frameTolerance:
@@ -356,6 +361,7 @@ for thisTrial in trials:
                 fixation.frameNStop = frameN  # exact frame index
                 win.timeOnFlip(fixation, 'tStopRefresh')  # time at next scr refresh
                 fixation.setAutoDraw(False)
+                fixation_end = triggerClock.getTime()
         
         # *image_before* updates
         if image_before.status == NOT_STARTED and tThisFlip >= current_jitter + 0.1-frameTolerance:
@@ -365,6 +371,7 @@ for thisTrial in trials:
             image_before.tStartRefresh = tThisFlipGlobal  # on global time
             win.timeOnFlip(image_before, 'tStartRefresh')  # time at next scr refresh
             image_before.setAutoDraw(True)
+            image_before_start = triggerClock.getTime()
         if image_before.status == STARTED:
             # is it time to stop? (based on global clock, using actual start)
             if tThisFlipGlobal > image_before.tStartRefresh + 5-frameTolerance:
@@ -373,6 +380,7 @@ for thisTrial in trials:
                 image_before.frameNStop = frameN  # exact frame index
                 win.timeOnFlip(image_before, 'tStopRefresh')  # time at next scr refresh
                 image_before.setAutoDraw(False)
+                image_before_end = triggerClock.getTime()
         
         # *image_after* updates
         if image_after.status == NOT_STARTED and tThisFlip >= current_jitter + 0.1-frameTolerance:
@@ -382,6 +390,7 @@ for thisTrial in trials:
             image_after.tStartRefresh = tThisFlipGlobal  # on global time
             win.timeOnFlip(image_after, 'tStartRefresh')  # time at next scr refresh
             image_after.setAutoDraw(True)
+            image_after_start = triggerClock.getTime()
         if image_after.status == STARTED:
             # is it time to stop? (based on global clock, using actual start)
             if tThisFlipGlobal > image_after.tStartRefresh + 5-frameTolerance:
@@ -390,6 +399,7 @@ for thisTrial in trials:
                 image_after.frameNStop = frameN  # exact frame index
                 win.timeOnFlip(image_after, 'tStopRefresh')  # time at next scr refresh
                 image_after.setAutoDraw(False)
+                imgae_after_end = triggerClock.getTime()
         
         # *order_choice* updates
         waitOnFlip = False
@@ -400,6 +410,7 @@ for thisTrial in trials:
             order_choice.tStartRefresh = tThisFlipGlobal  # on global time
             win.timeOnFlip(order_choice, 'tStartRefresh')  # time at next scr refresh
             order_choice.status = STARTED
+            order_choice_start = triggerClock.getTime()
             # keyboard checking is just starting
             waitOnFlip = True
             win.callOnFlip(order_choice.clock.reset)  # t=0 on next screen flip
@@ -411,13 +422,23 @@ for thisTrial in trials:
                 order_choice.tStop = t  # not accounting for scr refresh
                 order_choice.frameNStop = frameN  # exact frame index
                 win.timeOnFlip(order_choice, 'tStopRefresh')  # time at next scr refresh
+                order_choice_end = triggerClock.getTime()
                 order_choice.status = FINISHED
         if order_choice.status == STARTED and not waitOnFlip:
             theseKeys = order_choice.getKeys(keyList=['2', '3'], waitRelease=False)
             _order_choice_allKeys.extend(theseKeys)
             if len(_order_choice_allKeys):
-                order_choice.keys = _order_choice_allKeys[-1].name  # just the last key pressed
-                order_choice.rt = _order_choice_allKeys[-1].rt
+                lastKey = _order_choice_allKeys[-1]
+                order_choice.keys = lastKey.name  # just the last key pressed
+                order_choice.rt = lastKey.rt
+                
+                # get press start and end times
+                order_choice_press_start = triggerClock.getTime()
+                if lastKey.duration in not None:
+                    order_choice_press_end = order_choice_press_start + lastKey.duration
+                else:
+                    order_choice_press_end = None
+                    
                 # was this correct?
                 if (order_choice.keys == str(MCfam_keyboard)) or (order_choice.keys == MCfam_keyboard):
                     order_choice.corr = 1
@@ -483,10 +504,16 @@ for thisTrial in trials:
             thisComponent.setAutoDraw(False)
     trials.addData('fixation.started', fixation.tStartRefresh)
     trials.addData('fixation.stopped', fixation.tStopRefresh)
+    trials.addData('fixation_start', fixation_start)
+    trials.addData('fixation_end', fixation_end)
     trials.addData('image_before.started', image_before.tStartRefresh)
     trials.addData('image_before.stopped', image_before.tStopRefresh)
+    trials.addData('image_before_start', image_before_start)
+    trials.addData('image_before_end', image_before_end)
     trials.addData('image_after.started', image_after.tStartRefresh)
     trials.addData('image_after.stopped', image_after.tStopRefresh)
+    trials.addData('image_after_start', image_after_start)
+    trials.addData('image_after_end', image_after_end)
     # check responses
     if order_choice.keys in ['', [], None]:  # No response was made
         order_choice.keys = None
@@ -502,6 +529,9 @@ for thisTrial in trials:
         trials.addData('order_choice.rt', order_choice.rt)
     trials.addData('order_choice.started', order_choice.tStartRefresh)
     trials.addData('order_choice.stopped', order_choice.tStopRefresh)
+    trials.addData('order_choice_press_start', order_choice_press_start)
+    trials.addData('order_choice_press_end', order_choice_press_end)
+    
     # the Routine "screenshots" was not non-slip safe, so reset the non-slip timer
     routineTimer.reset()
     thisExp.nextEntry()
